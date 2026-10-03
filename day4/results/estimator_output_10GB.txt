@@ -1,0 +1,35 @@
+Memory available: 10.0 GB
+
+Qwen small             Q4_K_M    1.5B ctx   8K weights   0.85 GB kv  0.24 GB total   1.20 GB -> fits comfortably
+Granite / Qwen mid     Q4_K_M    8.0B ctx   8K weights   4.56 GB kv  1.28 GB total   6.42 GB -> fits comfortably
+Mid at FP16            FP16      8.0B ctx   8K weights  16.00 GB kv  1.28 GB total  19.01 GB -> does NOT fit
+Large local            Q4_K_M   30.0B ctx   8K weights  17.10 GB kv  4.80 GB total  24.09 GB -> does NOT fit
+Server class           Q4_K_M   70.0B ctx   8K weights  39.90 GB kv 11.20 GB total  56.21 GB -> does NOT fit
+
+Same 8B model, different context lengths:
+8B agent               Q4_K_M    8.0B ctx   4K weights   4.56 GB kv  0.64 GB total   5.72 GB -> fits comfortably
+8B agent               Q4_K_M    8.0B ctx   8K weights   4.56 GB kv  1.28 GB total   6.42 GB -> fits comfortably
+8B agent               Q4_K_M    8.0B ctx  32K weights   4.56 GB kv  5.12 GB total  10.65 GB -> does NOT fit
+8B agent               Q4_K_M    8.0B ctx 128K weights   4.56 GB kv 20.48 GB total  27.54 GB -> does NOT fit
+
+Same 8B model, different quantizations:
+8B agent               Q3_K_M    8.0B ctx   8K weights   3.44 GB kv  1.28 GB total   5.19 GB -> fits comfortably
+8B agent               Q4_K_M    8.0B ctx   8K weights   4.56 GB kv  1.28 GB total   6.42 GB -> fits comfortably
+8B agent               Q5_K_M    8.0B ctx   8K weights   5.44 GB kv  1.28 GB total   7.39 GB -> fits, but tight
+8B agent               Q8_0      8.0B ctx   8K weights   8.00 GB kv  1.28 GB total  10.21 GB -> does NOT fit
+8B agent               FP16      8.0B ctx   8K weights  16.00 GB kv  1.28 GB total  19.01 GB -> does NOT fit
+
+Experiment 3: models I am considering:
+Model I want           Q4_K_M   14.0B ctx  32K weights   7.98 GB kv  8.96 GB total  18.63 GB -> does NOT fit
+Fallback               Q4_K_M    8.0B ctx   8K weights   4.56 GB kv  1.28 GB total   6.42 GB -> fits comfortably
+
+Part D candidates (Q4_K_M, 8K context):
+Qwen3-8B               Q4_K_M    8.2B ctx   8K weights   4.67 GB kv  1.31 GB total   6.58 GB -> fits comfortably
+Mistral-7B v0.3        Q4_K_M    7.2B ctx   8K weights   4.13 GB kv  1.16 GB total   5.82 GB -> fits comfortably
+Granite 4.0 Micro      Q4_K_M    3.0B ctx   8K weights   1.71 GB kv  0.48 GB total   2.41 GB -> fits comfortably
+gpt-oss-20b (21B)      Q4_K_M   21.0B ctx   8K weights  11.97 GB kv  3.36 GB total  16.86 GB -> does NOT fit
+
+Derived answers:
+Largest model at Q4_K_M, 8K ctx : 12.5B (tight limit), 8.7B (comfortable)
+Largest ctx for 8B at Q4_K_M    : 28.3K (tight limit), 11.3K (comfortable)
+Friend with 6 GB card, Q4_K_M 8K: 7.47B max
